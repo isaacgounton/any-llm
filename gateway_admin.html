@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>any-llm Gateway Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .header-info {
+            display: flex;
+            gap: 30px;
+            font-size: 14px;
+            color: #666;
+            flex-wrap: wrap;
+        }
+
+        .config-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .config-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="password"],
+        select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            margin-bottom: -2px;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background: #f9fafb;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .key-display {
+            background: #f3f4f6;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid #f0f0f0;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2,
+            .grid-3,
+            .config-group {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 any-llm Gateway Admin Panel</h1>
+            <div class="header-info">
+                <div>
+                    <strong>Gateway URL:</strong>
+                    <input type="text" id="gatewayUrl" placeholder="https://llm.etugrand.com" style="width: 300px; margin-left: 10px;">
+                </div>
+                <div>
+                    <strong>Master Key:</strong>
+                    <input type="password" id="masterKey" placeholder="Enter your master key" style="width: 300px; margin-left: 10px;">
+                </div>
+                <button class="btn-primary" onclick="testConnection()">Test Connection</button>
+            </div>
+        </div>
+
+        <div id="alert-container"></div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('users')">👥 Users</button>
+            <button class="tab-button" onclick="switchTab('keys')">🔑 API Keys</button>
+            <button class="tab-button" onclick="switchTab('budgets')">💰 Budgets</button>
+        </div>
+
+        <!-- Users Tab -->
+        <div id="users" class="tab-content active">
+            <div class="config-section">
+                <h2>Create New User</h2>
+                <div class="config-group">
+                    <div class="form-group">
+                        <label for="userId">User ID *</label>
+                        <input type="text" id="userId" placeholder="user-123">
+                    </div>
+                    <div class="form-group">
+                        <label for="userAlias">User Alias/Name</label>
+                        <input type="text" id="userAlias" placeholder="Alice">
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email (optional)</label>
+                        <input type="text" id="userEmail" placeholder="alice@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="userBudgetId">Budget ID (optional)</label>
+                        <input type="text" id="userBudgetId" placeholder="Leave empty for unlimited">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="createUser()">Create User</button>
+            </div>
+
+            <div class="config-section">
+                <h2>Users List</h2>
+                <div class="table-responsive">
+                    <table id="usersList">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Alias</th>
+                                <th>Email</th>
+                                <th>Budget</th>
+                                <th>Current Spend</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="7">Load users to display</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn-secondary" onclick="listUsers()" style="margin-top: 15px;">Refresh Users</button>
+            </div>
+        </div>
+
+        <!-- API Keys Tab -->
+        <div id="keys" class="tab-content">
+            <div class="config-section">
+                <h2>Create New API Key</h2>
+                <div class="config-group">
+                    <div class="form-group">
+                        <label for="keyName">Key Name *</label>
+                        <input type="text" id="keyName" placeholder="mobile-app">
+                    </div>
+                    <div class="form-group">
+                        <label for="keyExpiration">Expiration (optional)</label>
+                        <input type="text" id="keyExpiration" placeholder="2025-12-31T23:59:59Z">
+                    </div>
+                    <div class="form-group">
+                        <label for="keyUserId">Associated User ID (optional)</label>
+                        <input type="text" id="keyUserId" placeholder="user-123">
+                    </div>
+                    <div class="form-group">
+                        <label for="keyMetadata">Metadata JSON (optional)</label>
+                        <input type="text" id="keyMetadata" placeholder='{"app":"mobile"}'>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="createKey()">Create API Key</button>
+            </div>
+
+            <div class="config-section" id="keyCreatedSection" style="display: none;">
+                <h2>✅ API Key Created</h2>
+                <div class="alert alert-info">
+                    ⚠️ <strong>Important:</strong> Save this key immediately. It will not be shown again!
+                </div>
+                <div class="key-display">
+                    <span id="keyDisplay"></span>
+                    <button class="copy-btn" onclick="copyToClipboard('keyDisplay')">Copy</button>
+                </div>
+                <button class="btn-secondary" onclick="document.getElementById('keyCreatedSection').style.display='none'">Close</button>
+            </div>
+
+            <div class="config-section">
+                <h2>Existing API Keys</h2>
+                <div class="table-responsive">
+                    <table id="keysList">
+                        <thead>
+                            <tr>
+                                <th>Key Name</th>
+                                <th>Key ID</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Expires</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="6">Load keys to display</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn-secondary" onclick="listKeys()" style="margin-top: 15px;">Refresh Keys</button>
+            </div>
+        </div>
+
+        <!-- Budgets Tab -->
+        <div id="budgets" class="tab-content">
+            <div class="config-section">
+                <h2>Create New Budget</h2>
+                <div class="config-group">
+                    <div class="form-group">
+                        <label for="budgetAmount">Max Budget (USD) *</label>
+                        <input type="number" id="budgetAmount" placeholder="10.00" step="0.01" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetDuration">Duration (seconds) *</label>
+                        <select id="budgetDuration">
+                            <option value="86400">1 Day (86400s)</option>
+                            <option value="604800">1 Week (604800s)</option>
+                            <option value="2592000" selected>1 Month (2592000s)</option>
+                            <option value="31536000">1 Year (31536000s)</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="customDurationGroup" style="display: none;">
+                        <label for="customDuration">Custom Duration (seconds)</label>
+                        <input type="number" id="customDuration" placeholder="86400">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="createBudget()">Create Budget</button>
+            </div>
+
+            <div class="config-section">
+                <h2>Existing Budgets</h2>
+                <div class="table-responsive">
+                    <table id="budgetsList">
+                        <thead>
+                            <tr>
+                                <th>Budget ID</th>
+                                <th>Max Budget</th>
+                                <th>Duration</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="5">Load budgets to display</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn-secondary" onclick="listBudgets()" style="margin-top: 15px;">Refresh Budgets</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showAlert(message, type = 'info') {
+            const container = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            container.appendChild(alert);
+            
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showAlert('Copied to clipboard!', 'success');
+            });
+        }
+
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const gateway = document.getElementById('gatewayUrl').value;
+            const masterKey = document.getElementById('masterKey').value;
+
+            if (!gateway || !masterKey) {
+                showAlert('Please enter Gateway URL and Master Key', 'error');
+                return null;
+            }
+
+            const url = `${gateway}${endpoint}`;
+            const options = {
+                method,
+                headers: {
+                    'X-AnyLLM-Key': `Bearer ${masterKey}`,
+                    'Content-Type': 'application/json',
+                }
+            };
+
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            try {
+                const response = await fetch(url, options);
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showAlert(`Error: ${result.detail || response.statusText}`, 'error');
+                    return null;
+                }
+
+                return result;
+            } catch (error) {
+                showAlert(`Request failed: ${error.message}`, 'error');
+                return null;
+            }
+        }
+
+        async function testConnection() {
+            const gateway = document.getElementById('gatewayUrl').value;
+            
+            if (!gateway) {
+                showAlert('Please enter Gateway URL', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${gateway}/health`);
+                if (response.ok) {
+                    showAlert('✅ Gateway is healthy!', 'success');
+                } else {
+                    showAlert('Gateway returned error', 'error');
+                }
+            } catch (error) {
+                showAlert(`Connection failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Users
+        async function createUser() {
+            const userId = document.getElementById('userId').value;
+            const alias = document.getElementById('userAlias').value;
+            const email = document.getElementById('userEmail').value;
+            const budgetId = document.getElementById('userBudgetId').value;
+
+            if (!userId) {
+                showAlert('User ID is required', 'error');
+                return;
+            }
+
+            const data = {
+                user_id: userId,
+                alias: alias || undefined,
+                email: email || undefined,
+                budget_id: budgetId || undefined
+            };
+
+            Object.keys(data).forEach(key => data[key] === undefined && delete data[key]);
+
+            const result = await apiCall('/v1/users', 'POST', data);
+            
+            if (result) {
+                showAlert('✅ User created successfully!', 'success');
+                document.getElementById('userId').value = '';
+                document.getElementById('userAlias').value = '';
+                document.getElementById('userEmail').value = '';
+                document.getElementById('userBudgetId').value = '';
+                listUsers();
+            }
+        }
+
+        async function listUsers() {
+            const result = await apiCall('/v1/users');
+            
+            if (!result) return;
+
+            const tbody = document.querySelector('#usersList tbody');
+            tbody.innerHTML = '';
+
+            if (Array.isArray(result) && result.length > 0) {
+                result.forEach(user => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>${user.user_id}</td>
+                        <td>${user.alias || '-'}</td>
+                        <td>${user.email || '-'}</td>
+                        <td>${user.budget_id || 'Unlimited'}</td>
+                        <td>$${(user.spend || 0).toFixed(2)}</td>
+                        <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn-danger btn-small" onclick="deleteUser('${user.user_id}')">Delete</button>
+                        </td>
+                    `;
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="7">No users found</td></tr>';
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm(`Delete user ${userId}?`)) return;
+            
+            const result = await apiCall(`/v1/users/${userId}`, 'DELETE');
+            
+            if (result !== null) {
+                showAlert('✅ User deleted successfully!', 'success');
+                listUsers();
+            }
+        }
+
+        // API Keys
+        async function createKey() {
+            const keyName = document.getElementById('keyName').value;
+            const expiration = document.getElementById('keyExpiration').value;
+            const userId = document.getElementById('keyUserId').value;
+            const metadata = document.getElementById('keyMetadata').value;
+
+            if (!keyName) {
+                showAlert('Key name is required', 'error');
+                return;
+            }
+
+            const data = {
+                key_name: keyName,
+                expires_at: expiration || undefined,
+                user_id: userId || undefined
+            };
+
+            if (metadata) {
+                try {
+                    data.metadata = JSON.parse(metadata);
+                } catch {
+                    showAlert('Invalid metadata JSON', 'error');
+                    return;
+                }
+            }
+
+            Object.keys(data).forEach(key => data[key] === undefined && delete data[key]);
+
+            const result = await apiCall('/v1/keys', 'POST', data);
+            
+            if (result) {
+                showAlert('✅ API Key created successfully!', 'success');
+                document.getElementById('keyDisplay').textContent = result.key;
+                document.getElementById('keyCreatedSection').style.display = 'block';
+                document.getElementById('keyName').value = '';
+                document.getElementById('keyExpiration').value = '';
+                document.getElementById('keyUserId').value = '';
+                document.getElementById('keyMetadata').value = '';
+                listKeys();
+            }
+        }
+
+        async function listKeys() {
+            const result = await apiCall('/v1/keys');
+            
+            if (!result) return;
+
+            const tbody = document.querySelector('#keysList tbody');
+            tbody.innerHTML = '';
+
+            if (Array.isArray(result) && result.length > 0) {
+                result.forEach(key => {
+                    const row = tbody.insertRow();
+                    const isActive = key.is_active;
+                    row.innerHTML = `
+                        <td>${key.key_name}</td>
+                        <td>${key.id}</td>
+                        <td><span class="status-badge ${isActive ? 'status-active' : 'status-inactive'}">${isActive ? 'Active' : 'Inactive'}</span></td>
+                        <td>${new Date(key.created_at).toLocaleDateString()}</td>
+                        <td>${key.expires_at ? new Date(key.expires_at).toLocaleDateString() : 'Never'}</td>
+                        <td>
+                            ${isActive ? `<button class="btn-secondary btn-small" onclick="deactivateKey('${key.id}')">Deactivate</button>` : ''}
+                            <button class="btn-danger btn-small" onclick="deleteKey('${key.id}')">Delete</button>
+                        </td>
+                    `;
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="6">No API keys found</td></tr>';
+            }
+        }
+
+        async function deactivateKey(keyId) {
+            const result = await apiCall(`/v1/keys/${keyId}`, 'PATCH', { is_active: false });
+            
+            if (result !== null) {
+                showAlert('✅ Key deactivated', 'success');
+                listKeys();
+            }
+        }
+
+        async function deleteKey(keyId) {
+            if (!confirm(`Delete this API key?`)) return;
+            
+            const result = await apiCall(`/v1/keys/${keyId}`, 'DELETE');
+            
+            if (result !== null) {
+                showAlert('✅ Key deleted successfully!', 'success');
+                listKeys();
+            }
+        }
+
+        // Budgets
+        document.addEventListener('DOMContentLoaded', () => {
+            const durationSelect = document.getElementById('budgetDuration');
+            durationSelect.addEventListener('change', (e) => {
+                document.getElementById('customDurationGroup').style.display = 
+                    e.target.value === 'custom' ? 'block' : 'none';
+            });
+        });
+
+        async function createBudget() {
+            let duration = document.getElementById('budgetDuration').value;
+            
+            if (duration === 'custom') {
+                duration = document.getElementById('customDuration').value;
+                if (!duration) {
+                    showAlert('Please enter custom duration', 'error');
+                    return;
+                }
+            }
+
+            const amount = document.getElementById('budgetAmount').value;
+
+            if (!amount) {
+                showAlert('Budget amount is required', 'error');
+                return;
+            }
+
+            const data = {
+                max_budget: parseFloat(amount),
+                budget_duration_sec: parseInt(duration)
+            };
+
+            const result = await apiCall('/v1/budgets', 'POST', data);
+            
+            if (result) {
+                showAlert('✅ Budget created successfully!', 'success');
+                document.getElementById('budgetAmount').value = '';
+                document.getElementById('budgetDuration').value = '2592000';
+                listBudgets();
+            }
+        }
+
+        async function listBudgets() {
+            const result = await apiCall('/v1/budgets');
+            
+            if (!result) return;
+
+            const tbody = document.querySelector('#budgetsList tbody');
+            tbody.innerHTML = '';
+
+            if (Array.isArray(result) && result.length > 0) {
+                result.forEach(budget => {
+                    const row = tbody.insertRow();
+                    const duration = budget.budget_duration_sec;
+                    let durationText = '';
+                    if (duration === 86400) durationText = '1 Day';
+                    else if (duration === 604800) durationText = '1 Week';
+                    else if (duration === 2592000) durationText = '1 Month';
+                    else if (duration === 31536000) durationText = '1 Year';
+                    else durationText = `${(duration / 86400).toFixed(1)} days`;
+
+                    row.innerHTML = `
+                        <td>${budget.id}</td>
+                        <td>$${budget.max_budget.toFixed(2)}</td>
+                        <td>${durationText}</td>
+                        <td>${new Date(budget.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn-danger btn-small" onclick="deleteBudget('${budget.id}')">Delete</button>
+                        </td>
+                    `;
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="5">No budgets found</td></tr>';
+            }
+        }
+
+        async function deleteBudget(budgetId) {
+            if (!confirm(`Delete this budget?`)) return;
+            
+            const result = await apiCall(`/v1/budgets/${budgetId}`, 'DELETE');
+            
+            if (result !== null) {
+                showAlert('✅ Budget deleted successfully!', 'success');
+                listBudgets();
+            }
+        }
+
+        // Auto-fill gateway URL
+        window.addEventListener('load', () => {
+            const url = new URL(window.location);
+            const hostname = url.hostname;
+            const protocol = url.protocol;
+            if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+                document.getElementById('gatewayUrl').value = `${protocol}//${hostname}`;
+            }
+        });
+    </script>
+</body>
+</html>
