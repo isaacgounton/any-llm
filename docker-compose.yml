@@ -10,9 +10,7 @@ services:
     # If you want to use a different port, change it here and in the config.yml file.
     ports:
       - "8010:8000"
-    volumes:
-      - ./config.yml:/app/config.yml
-    command: ["any-llm-gateway", "serve", "--config", "/app/config.yml"]
+    command: ["any-llm-gateway", "serve"]
     depends_on:
       postgres:
         condition: service_healthy
