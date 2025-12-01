@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY pyproject.toml ./
 COPY src/ ./src/
+COPY docker/config.yml ./config.yml
 
 ARG VERSION=0.0.0+docker
 ENV SETUPTOOLS_SCM_PRETEND_VERSION="${VERSION}"
@@ -24,4 +25,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 ENV GATEWAY_HOST=0.0.0.0
 ENV GATEWAY_PORT=8000
 
-CMD ["any-llm-gateway", "serve"]
+CMD ["any-llm-gateway", "serve", "-c", "/app/config.yml"]

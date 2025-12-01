@@ -54,7 +54,7 @@ services:
       - ZAI_API_KEY=${ZAI_API_KEY}
       - ANY_LLM_KEY=${ANY_LLM_KEY}
       - GATEWAY_API_KEY=${GATEWAY_API_KEY}
-    command: ["any-llm-gateway", "serve"]
+    command: ["any-llm-gateway", "serve", "-c", "/app/config.yml"]
     depends_on:
       postgres:
         condition: service_healthy
