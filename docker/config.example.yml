@@ -28,6 +28,95 @@ providers:
   mistral:
     api_key: YOUR_MISTRAL_API_KEY_HERE
 
+  deepseek:
+    api_key: YOUR_DEEPSEEK_API_KEY_HERE
+
+  cohere:
+    api_key: YOUR_COHERE_API_KEY_HERE
+
+  groq:
+    api_key: YOUR_GROQ_API_KEY_HERE
+
+  together:
+    api_key: YOUR_TOGETHER_API_KEY_HERE
+
+  fireworks:
+    api_key: YOUR_FIREWORKS_API_KEY_HERE
+
+  cerebras:
+    api_key: YOUR_CEREBRAS_API_KEY_HERE
+
+  sambanova:
+    api_key: YOUR_SAMBANOVA_API_KEY_HERE
+
+  voyage:
+    api_key: YOUR_VOYAGE_API_KEY_HERE
+
+  portkey:
+    api_key: YOUR_PORTKEY_API_KEY_HERE
+
+  openrouter:
+    api_key: YOUR_OPENROUTER_API_KEY_HERE
+
+  perplexity:
+    api_key: YOUR_PERPLEXITY_API_KEY_HERE
+
+  gemini:
+    api_key: YOUR_GEMINI_API_KEY_HERE
+
+  azure:
+    api_key: YOUR_AZURE_OPENAI_API_KEY_HERE
+
+  bedrock:
+    access_key: YOUR_AWS_ACCESS_KEY_ID_HERE
+    secret_key: YOUR_AWS_SECRET_ACCESS_KEY_HERE
+    bearer_token: YOUR_AWS_BEARER_TOKEN_BEDROCK_HERE
+
+  huggingface:
+    api_key: YOUR_HF_TOKEN_HERE
+
+  lm_studio:
+    api_key: YOUR_LM_STUDIO_API_KEY_HERE
+
+  ollama:
+    api_key: YOUR_OLLAMA_API_KEY_HERE
+
+  llamacpp:
+    api_key: YOUR_LLAMACPP_API_KEY_HERE
+
+  llamafile:
+    api_key: YOUR_LLAMAFILE_API_KEY_HERE
+
+  databricks:
+    token: YOUR_DATABRICKS_TOKEN_HERE
+
+  watsonx:
+    api_key: YOUR_WATSONX_API_KEY_HERE
+
+  moonshot:
+    api_key: YOUR_MOONSHOT_API_KEY_HERE
+
+  nebius:
+    api_key: YOUR_NEBIUS_API_KEY_HERE
+
+  inception:
+    api_key: YOUR_INCEPTION_API_KEY_HERE
+
+  llama:
+    api_key: YOUR_LLAMA_API_KEY_HERE
+
+  minimax:
+    api_key: YOUR_MINIMAX_API_KEY_HERE
+
+  xai:
+    api_key: YOUR_XAI_API_KEY_HERE
+
+  zai:
+    api_key: YOUR_ZAI_API_KEY_HERE
+
+  google:
+    api_key: YOUR_GOOGLE_API_KEY_HERE
+
   # Add more providers as needed...
 
 # Model pricing configuration (optional but necessary for price tracking)
