@@ -9,7 +9,7 @@ services:
         VERSION: ${VERSION:-0.0.0+local}
     # If you want to use a different port, change it here and in the config.yml file.
     ports:
-      - "8000:8000"
+      - "8010:8000"
     volumes:
       - ./config.yml:/app/config.yml
     command: ["any-llm-gateway", "serve", "--config", "/app/config.yml"]
