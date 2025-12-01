@@ -12,12 +12,12 @@ services:
       - "8000:8000"
     volumes:
       - ./config.yml:/app/config.yml
-      - ./service_account.json:/app/service_account.json
     command: ["any-llm-gateway", "serve", "--config", "/app/config.yml"]
     depends_on:
       postgres:
         condition: service_healthy
     restart: unless-stopped
+    env_file: []
 
   postgres:
     image: postgres:16-alpine
