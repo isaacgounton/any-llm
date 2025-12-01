@@ -27,22 +27,39 @@ def get_config() -> GatewayConfig:
 
 
 def _extract_bearer_token(request: Request, config: GatewayConfig) -> str:
-    """Extract and validate Bearer token from request header."""
+    """Extract and validate Bearer token from request header.
+    
+    Supports both:
+    - Custom X-AnyLLM-Key header (for direct gateway clients)
+    - Standard Authorization header (for OpenAI-compatible clients like n8n)
+    """
+    # Try custom X-AnyLLM-Key header first
     x_anyllm_key = request.headers.get(API_KEY_HEADER)
-
-    if not x_anyllm_key:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Missing {API_KEY_HEADER} header",
-        )
-
-    if not x_anyllm_key.startswith("Bearer "):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Invalid {API_KEY_HEADER} header format. Expected 'Bearer <token>'",
-        )
-
-    return x_anyllm_key[7:]
+    
+    if x_anyllm_key:
+        if not x_anyllm_key.startswith("Bearer "):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=f"Invalid {API_KEY_HEADER} header format. Expected 'Bearer <token>'",
+            )
+        return x_anyllm_key[7:]
+    
+    # Fall back to standard Authorization header (OpenAI-compatible)
+    auth_header = request.headers.get("Authorization")
+    
+    if auth_header:
+        if not auth_header.startswith("Bearer "):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid Authorization header format. Expected 'Bearer <token>'",
+            )
+        return auth_header[7:]
+    
+    # Neither header provided
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail=f"Missing authentication header. Use either '{API_KEY_HEADER}' or 'Authorization' header with 'Bearer <token>' format",
+    )
 
 
 def _verify_and_update_api_key(db: Session, token: str) -> APIKey:
