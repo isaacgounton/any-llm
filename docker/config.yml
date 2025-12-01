@@ -123,11 +123,11 @@ providers:
 # Format: "provider:model" -> input/output price per million tokens
 # Database pricing takes precedence - config only sets initial values
 # Prices are in USD per million tokens
-pricing:
+pricing: {}
   # See https://cloud.google.com/vertex-ai/generative-ai/pricing
   # vertexai:Qwen3-235B-A22B-Instruct-2507:
   #   input_price_per_million: 0.25
   #   output_price_per_million: 1.00
   # openai:gpt-5:
-    # input_price_per_million: 0.25
-    # output_price_per_million: 1.00
+  #   input_price_per_million: 0.25
+  #   output_price_per_million: 1.00
