@@ -6,7 +6,8 @@
 
 ## Cookbooks
 
-* [Getting Started](cookbooks/any-llm-getting-started.md)
+* [Getting Started with Any-LLM](cookbooks/any-llm-getting-started.md)
+* [Browser-Use with Any-LLM](cookbooks/browser-use-with-any-llm.md)
 
 ## API Reference
 
@@ -26,17 +27,3 @@
   * [Provider](api/types/provider.md)
   * [Batch](api/types/batch.md)
 
-## Managed Platform
-
-* [Overview](platform/overview.md)
-
-## Gateway
-
-* [Overview](gateway/overview.md)
-* [Quick Start](gateway/quickstart.md)
-* [Authentication](gateway/authentication.md)
-* [Budget Management](gateway/budget-management.md)
-* [Configuration](gateway/configuration.md)
-* [API Reference](gateway/api-reference.md)
-* [Troubleshooting](gateway/troubleshooting.md)
-* [Docker Deployment](gateway/docker-deployment.md)
