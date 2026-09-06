@@ -62,7 +62,7 @@ Normalized parameters for the Responses API, used internally to pass structured 
 | Field | Type | Description |
 |-------|------|-------------|
 | `model` | `str` | Model identifier (e.g., 'mistral-small-latest') |
-| `input` | `str \| list[EasyInputMessageParam \| Message \| ResponseOutputMessageParam \| ResponseFileSearchToolCallParam \| ResponseComputerToolCallParam \| ComputerCallOutput \| ResponseFunctionWebSearchParam \| ResponseFunctionToolCallParam \| FunctionCallOutput \| ToolSearchCall \| ResponseToolSearchOutputItemParamParam \| AdditionalTools \| ResponseReasoningItemParam \| ResponseCompactionItemParamParam \| ImageGenerationCall \| ResponseCodeInterpreterToolCallParam \| LocalShellCall \| LocalShellCallOutput \| ShellCall \| ShellCallOutput \| ApplyPatchCall \| ApplyPatchCallOutput \| McpListTools \| McpApprovalRequest \| McpApprovalResponse \| McpCall \| ResponseCustomToolCallOutputParam \| ResponseCustomToolCallParam \| CompactionTrigger \| ItemReference]` | The input payload accepted by provider's Responses API. For OpenAI-compatible providers, this is typically a list mixing text, images, and tool instructions, or a dict per OpenAI spec. |
+| `input` | `str \| list[dict[str, Any]]` | Input text or wire-format Responses items. The outer request is validated, but input items are passed through without schema validation. The API permits replaying provider response and reasoning items whose context-dependent shapes can exceed the SDK's generated ``ResponseInputParam`` union. |
 | `instructions` | `str \| None` |  |
 | `max_tool_calls` | `int \| None` |  |
 | `text` | `Any \| None` |  |
@@ -80,6 +80,7 @@ Normalized parameters for the Responses API, used internally to pass structured 
 | `presence_penalty` | `float \| None` | Penalizes new tokens based on whether they appear in the text so far. |
 | `frequency_penalty` | `float \| None` | Penalizes new tokens based on their frequency in the text so far. |
 | `truncation` | `str \| None` | Controls how the service truncates the input when it exceeds the model context window. |
+| `context_management` | `list[dict[str, Any]] \| None` | OpenAI Responses context management configuration. |
 | `store` | `bool \| None` | Whether to store the response so it can be retrieved later. |
 | `service_tier` | `str \| None` | The service tier to use for this request. |
 | `user` | `str \| None` | A unique identifier representing your end user. |
